@@ -14,8 +14,8 @@ struct HStripe: Shape {
         // avoid size being too small for CG to calculate
         let stripe = stripeSize ?? defaultStripeSize
         let realStripeSize = (stripe < minStripeSize) ? minStripeSize : stripe
-        let intervalSize = realStripeSize * stripeSpaceratio
-        let numebrOfLines = Int(floor(rect.height / intervalSize))
+        let intervalSize = realStripeSize * stripeSpaceRatio
+        let numberOfLines = Int(floor(rect.height / intervalSize))
         
         // Draw horizontal lines
         var p = Path()
@@ -39,7 +39,7 @@ struct HStripe: Shape {
 }
 
 struct CardShadingView_Preview: PreviewProvider {
-    static var preview: some View {
-        HStripe(stripeSize: 3.0).previewLayout(.fixed(width:10, height: 10))
+    static var previews: some View {
+        HStripe(stripeSize: 3.0).previewLayout(.fixed(width: 10, height: 10))
     }
 }

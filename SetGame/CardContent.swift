@@ -45,7 +45,7 @@ struct CardContent: View {
     private func renderShape() -> some View {
         Group {
             switch card.shape {
-            case .featureA: renderFilling(){ Dimond() }
+            case .featureA: renderFilling(){ Diamond() }
             case .featureB: renderFilling(){ Squiggle() }
             case .featureC: renderFilling(){ Capsule() }
             }

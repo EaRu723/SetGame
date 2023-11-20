@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct TopActionBar: View {
-    @State private var showingAlert = FALSE
+    @State private var showingAlert = false
     @ObservedObject var game: SetGameViewModel
     
     var body: some View {
         HStack {
-            Text("Set Game").font(title2).bold().padding()
+            Text("Set Game").font(.title2).bold().padding()
             Spacer()
             Button(action: {
-                withAnimation (easeInOut) { showingAlert = true }
+                withAnimation (.easeInOut) { showingAlert = true }
             }, label: {
                 HStack {
                     Image(systemName: "plus.square.on.square")
@@ -24,7 +24,7 @@ struct TopActionBar: View {
                 }.padding()
             }).alert(isPresented: $showingAlert) {
                 Alert(title: Text("Start a new game?"), primaryButton: .default(Text("New Game")) {
-                    withAnimation (.easeinOut) {
+                    withAnimation (.easeInOut) {
                         game.new() }
                     },
                       secondaryButton: .cancel()

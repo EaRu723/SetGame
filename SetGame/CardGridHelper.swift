@@ -11,9 +11,9 @@ struct CardGridHelper<Item,ItemView>: View where Item: Identifiable, ItemView: V
     private var items: Array<Item>
     private var itemRatio: CGFloat
     private var itemsCount: Int
-    private var viweForItem: (Item) -> ItemView
+    private var viewForItem: (Item) -> ItemView
     
-    init(_ items: [Item], itemsCount: Int, itemRatio: CGFloat, viewForItem: @escaping (Item) -> Itemview) {
+    init(_ items: [Item], itemsCount: Int, itemRatio: CGFloat, viewForItem: @escaping (Item) -> ItemView) {
         self.items = items
         self.itemsCount = itemsCount
         self.viewForItem = viewForItem
@@ -44,10 +44,10 @@ struct CardGridHelper<Item,ItemView>: View where Item: Identifiable, ItemView: V
             VStack{
                 Rectangle()
                     .opacity(0)
-                    .frame(width: geometry.size.width, height: getColumns(itemCount: itemsCount, itemAspectRatio: itemRatio, in: geometry.size).deltaHeight, alignment: .top).animation(Animation.easeInOut(duration: 1.0).dealy(1.0))
+                    .frame(width: geometry.size.width, height: getColumns(itemCount: itemsCount, itemAspectRatio: itemRatio, in: geometry.size).deltaHeight, alignment: .top).animation(Animation.easeInOut(duration: 1.0).delay(1.0))
                 LazyVGrid(columns: getColumns(itemCount: itemsCount, itemAspectRatio: itemRatio, in: geometry.size).cols, spacing: HSpacing) {
-                    ForEach(items, id\.id) { item in
-                        viewForItem(item)
+                    ForEach(items, id: \.id) { item in
+                                            viewForItem(item)
                     }
                 }.frame(width:geometry.size.width, height: geometry.size.height, alignment: .top)
             }
@@ -59,6 +59,3 @@ struct CardGridHelper<Item,ItemView>: View where Item: Identifiable, ItemView: V
     private let vSpacing: CGFloat = 8.0
 }
 
-#Preview {
-    CardGridHelper()
-}

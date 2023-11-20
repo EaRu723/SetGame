@@ -16,7 +16,7 @@ struct SetGameHome: View {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     TopActionBar(game: game)
-                    CardGirdHelper(game.cards, itemsCount: game.playingCardCount, itemRatio: cardRatio) { card in
+                    CardGridHelper(game.cards, itemsCount: game.playingCardCount, itemRatio: cardRatio) { card in
                         GeometryReader { cardGeometry in
                             Button(action: {
                                 withAnimation (.easeInOut) { game.choose(card: card) }
@@ -47,7 +47,7 @@ struct SetGameHome: View {
 
 struct SetGameView_Previews: PreviewProvider {
     
-    static var prviews: some View {
+    static var previews: some View {
         Group {
             SetGameHome(game: SetGameViewModel())
         }

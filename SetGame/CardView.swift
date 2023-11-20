@@ -11,12 +11,12 @@ struct CardView: View {
     private var card: SetGameModel.Card
     
     // MARK: - Drawing Constants
-    private let: cardCornerRadius: CGFloat = 0.05
-    private let: cardStrokeSizeDefault: CGFloat = 0.01
-    private let: cardStrokeSizeChosen: CGFloat = 0.02
-    private let: cardPadding: CGFloat = 0.005
-    private let: cardContentPadding: CGFloat = 0.025
-    private let: cardOpacity: CGFloat = 0.05
+    private let cardCornerRadius: CGFloat = 0.05
+    private let cardStrokeSizeDefault: CGFloat = 0.01
+    private let cardStrokeSizeChosen: CGFloat = 0.02
+    private let cardPadding: CGFloat = 0.005
+    private let cardContentPadding: CGFloat = 0.025
+    private let cardOpacity: Double = 0.05
     
     init(_ card: SetGameModel.Card) {
         self.card = card
@@ -34,8 +34,8 @@ struct CardView: View {
                     ZStack {
                         // default card background
                         RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).foregroundColor(Color(UIColor.tertiarySystemBackground))
-                        RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).padding(size(of: (cardStrokeSizeDefailt / 2), geo: geo))
-                            .forgroundColor(Color(UIColor.separator))
+                        RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).padding(size(of: (cardStrokeSizeDefault / 2), geo: geo))
+                            .foregroundColor(Color(UIColor.separator))
                         
                         // hinted card border
                         if card.isHinted {
@@ -50,7 +50,7 @@ struct CardView: View {
                         // wrong set border and background
                         if card.isWrongSet {
                             Group {
-                                ROundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo))
+                                RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo))
                             }.foregroundColor(.red)
                         }
                         

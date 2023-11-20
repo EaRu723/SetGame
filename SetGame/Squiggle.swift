@@ -24,7 +24,7 @@ struct Squiggle: Shape {
     }
     
     private func getCGPoint(x: Double, y: Double, rect: CGRect) -> CGPoint {
-        return CGPoint(x: rect.origin.x + (CGFloar(x) * rect.size.width), y: rect.origin.y + (CGFloat(y) * rect.size.height))
+        return CGPoint(x: rect.origin.x + (CGFloat(x) * rect.size.width), y: rect.origin.y + (CGFloat(y) * rect.size.height))
     }
 }
 

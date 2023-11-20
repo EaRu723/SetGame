@@ -144,9 +144,9 @@ struct SetGameModel {
         }
         
         // hint the 3 cards
-        for card in potentialSets[hintingIndex!] {
-            cards[cards.firstIndex(matching: card)!].isHinted = true
-            hintedCards.append(card)
+        if let firstCardInSet = potentialSets[hintingIndex!].first {
+            cards[cards.firstIndex(matching: firstCardInSet)!].isHinted = true
+            hintedCards.append(firstCardInSet)
         }
     }
     
