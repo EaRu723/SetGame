@@ -29,11 +29,7 @@ class SetGameViewModel: ObservableObject {
     }
     
     var playingCardCount: Int {
-        return game.nextPlayingCardIndex
-    }
-
-    var remainingCards: Int {
-        return game.remainingCardCount
+        return game.numberOfCards
     }
     
     
@@ -44,15 +40,16 @@ class SetGameViewModel: ObservableObject {
     
     // MARK: - Intent(s)
     
-    func new() {
-        game = SetGameViewModel.createGame()
-    }
-    
     func choose(card: SetGameModel.Card) {
         game.choose(card: card)
     }
     
     func hint() {
         game.hint()
+    }
+    
+    func new() {
+        // Reset the game model
+        game = SetGameModel()
     }
 }

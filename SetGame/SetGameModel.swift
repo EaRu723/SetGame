@@ -10,21 +10,15 @@ struct SetGameModel {
     // MARK: - User Accessible Variables
     // playing cards
     private(set) var cards: [Card] = Array<Card>()
-    var remainingCardCount: Int {
-        get { 81 - nextPlayingCardIndex - matchedCardCount }
-    }
     var availableHints: Int {
         get { potentialSets.count }
     }
-    private(set) var nextPlayingCardIndex: Int = 12
     private(set) var gameFinished: Bool = false
+    private(set) var numberOfCards = 12
     
     // MARK: - Private Variables
 
-    private var matchedCardCount: Int = 0
-    private var numberOfCards = 12
     private var foundSets: Set<Set<Card>> = []
-
     private var chosenCards: [Card] = Array<Card>()
     private var wrongSetCards: [Card] = Array<Card>()
     private var hintedCards: [Card] = Array<Card>()
@@ -49,10 +43,18 @@ struct SetGameModel {
         potentialSets = findAllSetIndices()
     }
     
+    
     // MARK: Intent 1 - Choose a Card
     mutating func choose(card: Card) {
         // reset wrong sets upon any interaction
         resetWrongSet()
+        resetRightSet()
+        resetHintedSet()
+        
+        // reset correct sets upon any new card selection
+            for index in cards.indices {
+                cards[index].isRightSet = false
+            }
         
         let chosenCardIndex = cards.firstIndex(matching: card)!
         cards[chosenCardIndex].isChosen.toggle()
@@ -76,6 +78,7 @@ struct SetGameModel {
                     chosenCards.forEach { card in
                         if let index = cards.firstIndex(matching: card) {
                             cards[index].isChosen = false
+                            cards[index].isRightSet = true
                         }
                     }
                     chosenCards.removeAll()
@@ -88,6 +91,7 @@ struct SetGameModel {
                     for card in chosenCards {
                         cards[cards.firstIndex(matching: card)!].isChosen = false
                         cards[cards.firstIndex(matching: card)!].isWrongSet = true
+                        cards[cards.firstIndex(matching: card)!].isRightSet = false
                     }
                     wrongSetCards = chosenCards
                     chosenCards.removeAll()
@@ -95,6 +99,7 @@ struct SetGameModel {
             }
         } else {
             // matching card state
+            cards[chosenCardIndex].isRightSet = false
             chosenCards.remove(at: chosenCards.firstIndex(matching: cards[chosenCardIndex])!)
         }
     }
@@ -144,6 +149,13 @@ struct SetGameModel {
         chosenCards.removeAll()
     }
     
+    // New reset functions for right set and hinted set
+    private mutating func resetRightSet() {
+        for i in cards.indices {
+            cards[i].isRightSet = false
+        }
+    }
+    
     private mutating func resetWrongSet() {
         for card in wrongSetCards {
             cards[cards.firstIndex(matching: card)!].isWrongSet = false
@@ -167,10 +179,10 @@ struct SetGameModel {
         hintingIndex = nil
         
         var matchSets = Array<Array<Card>>()
-        guard nextPlayingCardIndex >= 3 else { return matchSets }
-        for a in (0..<(nextPlayingCardIndex - 2)) {
-            for b in ((a + 1)..<(nextPlayingCardIndex - 1)) {
-                for c in ((b + 1)..<nextPlayingCardIndex) {
+        guard numberOfCards >= 3 else { return matchSets }
+        for a in (0..<(numberOfCards - 2)) {
+            for b in ((a + 1)..<(numberOfCards - 1)) {
+                for c in ((b + 1)..<numberOfCards) {
                     if (isMatch(cardA: cards[a], cardB: cards[b], cardC: cards[c])) {
                         matchSets.append([cards[a], cards[b], cards[c]])
                     }
@@ -221,6 +233,7 @@ struct SetGameModel {
         var isWrongSet: Bool = false
         var isChosen: Bool = false
         var isHinted: Bool = false
+        var isRightSet: Bool = false
         
         func hash(into hasher: inout Hasher) {
             hasher.combine(id)  // Assuming 'id' is unique for each card

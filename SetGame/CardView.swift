@@ -53,8 +53,12 @@ struct CardView: View {
                                 RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo))
                             }.foregroundColor(.red)
                         }
-                        
-                        
+                        // right set border and background
+                        if card.isRightSet {
+                            Group {
+                                RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo))
+                            }.foregroundColor(.green)
+                        }
                         // card content
                         CardContent(of: card, cardHeight: geo.size.height).padding(size(of: cardContentPadding, geo: geo))
                     }
