@@ -1,6 +1,6 @@
 //
 //  SetGameHome.swift
-//  
+//
 //
 //  Created by Andrea Russo on 11/20/23.
 //
@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SetGameHome: View {
     @ObservedObject var game: SetGameViewModel
+    @State private var showCongratulationsPopup = false
     
     var body: some View {
         ZStack {
@@ -26,16 +27,34 @@ struct SetGameHome: View {
                                         x: ((geometry.size.width / 2) - (cardGeometry.size.width / 2) - cardGeometry.frame(in: CoordinateSpace.global).origin.x),
                                         y: insertAnimationYOffest - geometry.size.height
                                     ).combined(with: .opacity))
-//                                    .animation(.easeInOut)
+                                //                                    .animation(.easeInOut)
                             }
                         }.aspectRatio(cardRatio, contentMode: .fit)
-                        .transition(AnyTransition.asymmetric(insertion: .offset(x: 0, y: -geometry.size.height), removal: .offset(x: 0, y: geometry.size.height)).combined(with: .opacity))
-//                        .animation(.easeInOut)
+                            .transition(AnyTransition.asymmetric(insertion: .offset(x: 0, y: -geometry.size.height), removal: .offset(x: 0, y: geometry.size.height)).combined(with: .opacity))
+                        //                        .animation(.easeInOut)
                     }.padding([.leading, .trailing])
                     BottomActionBar(game: game, geometry: geometry)
                 }
             }
+            if game.gameFinished {
+                congratulationsPopup
+            }
         }
+    }
+    
+    // Define the congratulationsPopup outside the body
+    var congratulationsPopup: some View {
+        VStack {
+            Text("Congratulations!")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            Text("You found all the sets!")
+                .font(.title2)
+        }
+        .frame(width: 300, height: 200)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(radius: 10)
     }
     
     // MARK: - Drawing Constants

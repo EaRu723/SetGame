@@ -29,7 +29,7 @@ struct CardView: View {
     
     var body: some View {
         Group {
-            if (card.state == .playing) {
+            if (card.state == .playing || card.state == .foundSet) {
                 GeometryReader { geo in
                     ZStack {
                         // default card background
@@ -53,6 +53,7 @@ struct CardView: View {
                                 RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo))
                             }.foregroundColor(.red)
                         }
+                        
                         
                         // card content
                         CardContent(of: card, cardHeight: geo.size.height).padding(size(of: cardContentPadding, geo: geo))

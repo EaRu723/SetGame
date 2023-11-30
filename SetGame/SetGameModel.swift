@@ -1,4 +1,3 @@
-//
 //  SetGameMode.swift
 //  SetGame
 //
@@ -17,12 +16,14 @@ struct SetGameModel {
     var availableHints: Int {
         get { potentialSets.count }
     }
-    private(set) var nextPlayingCardIndex: Int = 0
+    private(set) var nextPlayingCardIndex: Int = 12
     private(set) var gameFinished: Bool = false
     
     // MARK: - Private Variables
 
     private var matchedCardCount: Int = 0
+    private var numberOfCards = 12
+    private var foundSets: Set<Set<Card>> = []
 
     private var chosenCards: [Card] = Array<Card>()
     private var wrongSetCards: [Card] = Array<Card>()
@@ -42,7 +43,10 @@ struct SetGameModel {
             }
         }
         cards.shuffle()
-        deal(12)
+        for index in 0..<numberOfCards {
+            cards[index].state = .playing
+        }
+        potentialSets = findAllSetIndices()
     }
     
     // MARK: Intent 1 - Choose a Card
@@ -63,24 +67,23 @@ struct SetGameModel {
                 
                 // reset the hint upon 3 chosen cards regardless of match
                 resetHintedSet()
-
-                if (isMatch(cardA: chosenCards[0], cardB: chosenCards[1], cardC: chosenCards[2])) {
-                    // is a match
-                    for card in chosenCards {
-                        cards[cards.firstIndex(matching: card)!].state = .matched
-                        cards.remove(at: cards.firstIndex(matching: card)!)
-                        
+                
+                let chosenSet = Set(chosenCards)
+                if !foundSets.contains(chosenSet) && isMatch(cardA: chosenCards[0], cardB: chosenCards[1], cardC: chosenCards[2]) {
+                    // is a match and not previously found
+                    foundSets.insert(chosenSet)
+                    // Reset selection of cards but leave them in play
+                    chosenCards.forEach { card in
+                        if let index = cards.firstIndex(matching: card) {
+                            cards[index].isChosen = false
+                        }
                     }
-                    matchedCardCount += 3
-                    nextPlayingCardIndex -= 3
                     chosenCards.removeAll()
-                    
-                    // find potential matches in new set
-                    potentialSets = findAllSetIndices()
-                    
-                    // deal 3 more cards if there is less than 12 playing cards
-                    if (nextPlayingCardIndex < 12) { deal() }
-                } else {
+                    if checkIfAllSetsFound() {
+                        gameFinished = true
+                    }
+                }
+                else {
                     // not a match
                     for card in chosenCards {
                         cards[cards.firstIndex(matching: card)!].isChosen = false
@@ -96,30 +99,6 @@ struct SetGameModel {
         }
     }
     
-    // MARK: Intent 2 - Deal (3) Cards
-    mutating func deal(_ n: Int = 3) {
-        // reset all playing card warnings
-        resetWrongSet()
-        
-        // deal n cards
-        for _ in (0..<n) {
-            // if all cards are dealt
-            if nextPlayingCardIndex >= cards.count {
-                break
-            }
-            cards[nextPlayingCardIndex].state = .playing
-            nextPlayingCardIndex += 1
-        }
-
-        // find all potential matches in current playing
-        potentialSets = findAllSetIndices()
-        
-        // if playing cards have no match and no more cards to deal, game is finished
-        if (potentialSets.count == 0 && nextPlayingCardIndex >= cards.count) {
-            gameFinished = true
-            print("Game: finished.")
-        }
-    }
     
     // MARK: Intent 3 - Show hint (loop)
     mutating func hint() {
@@ -130,7 +109,6 @@ struct SetGameModel {
         
         // break if no sets
         guard (potentialSets.count > 0) else { hintingIndex = nil; return }
-        
         
         switch hintingIndex {
         // if has hinting
@@ -144,10 +122,17 @@ struct SetGameModel {
         }
         
         // hint the 3 cards
-        if let firstCardInSet = potentialSets[hintingIndex!].first {
-            cards[cards.firstIndex(matching: firstCardInSet)!].isHinted = true
-            hintedCards.append(firstCardInSet)
+        for card in potentialSets[hintingIndex!] {
+            cards[cards.firstIndex(matching: card)!].isHinted = true
+            hintedCards.append(card)
         }
+    }
+    
+    // MARK: - check if all sets are found
+    private func checkIfAllSetsFound() -> Bool {
+        let allFoundSets = foundSets.flatMap { $0 }
+        let uniqueFoundSets = Set(allFoundSets)
+        return uniqueFoundSets.count == potentialSets.flatMap { $0 }.count
     }
     
     // MARK: - Supporting Funcs - Reset Card States
@@ -221,7 +206,7 @@ struct SetGameModel {
     
     // MARK: - Struct and Enum
     
-    struct Card: Identifiable {
+    struct Card: Identifiable, Hashable {
         var id = UUID()
         
         var number: CardFeature
@@ -236,11 +221,15 @@ struct SetGameModel {
         var isWrongSet: Bool = false
         var isChosen: Bool = false
         var isHinted: Bool = false
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)  // Assuming 'id' is unique for each card
+        }
     }
     
     // Card lifecycle fresh -> playing -> matched
     enum CardState: Equatable {
-        case fresh, playing, matched
+        case fresh, playing, matched, foundSet
     }
 
     // Three card features for each category: number, color, shape, or fill style

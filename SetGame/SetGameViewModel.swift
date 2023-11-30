@@ -14,7 +14,7 @@ class SetGameViewModel: ObservableObject {
         return SetGameModel()
     }
     
-    // MARK: Access to model
+    // MARK: - Access to model
     
     var cards: Array<SetGameModel.Card> {
         return game.cards
@@ -24,32 +24,28 @@ class SetGameViewModel: ObservableObject {
         return game.availableHints
     }
     
+    var gameFinished: Bool {
+        return game.gameFinished
+    }
+    
     var playingCardCount: Int {
         return game.nextPlayingCardIndex
     }
-    
+
     var remainingCards: Int {
         return game.remainingCardCount
     }
     
-    var dealDisabled: Bool {
-        if (game.remainingCardCount == 0) { return true }
-        else { return false}
-    }
     
     var hintDisabled: Bool {
         if (game.availableHints == 0) { return true }
         else { return false }
     }
     
-    // MARK: - Intent
+    // MARK: - Intent(s)
     
     func new() {
         game = SetGameViewModel.createGame()
-    }
-    
-    func deal () {
-        game.deal()
     }
     
     func choose(card: SetGameModel.Card) {

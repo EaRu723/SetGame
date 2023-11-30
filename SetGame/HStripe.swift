@@ -32,6 +32,7 @@ struct HStripe: Shape {
         return p
     }
     
+    
     // MARK: - Drawing Constants
     private let minStripeSize: CGFloat = 0.1
     private let defaultStripeSize: CGFloat = 1.0
