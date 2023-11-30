@@ -44,7 +44,7 @@ struct CardView: View {
                         
                         // chosen card border
                         if card.isChosen {
-                            RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo)).foregroundColor(.orange)
+                            RoundedRectangle(cornerRadius: size(of: cardCornerRadius, geo: geo)).stroke(lineWidth: size(of: cardStrokeSizeChosen, geo: geo)).padding(size(of: (cardStrokeSizeChosen / 2), geo: geo)).foregroundColor(.yellow)
                         }
                         
                         // wrong set border and background

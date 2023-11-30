@@ -33,6 +33,7 @@ struct SetGameHome: View {
                             .transition(AnyTransition.asymmetric(insertion: .offset(x: 0, y: -geometry.size.height), removal: .offset(x: 0, y: geometry.size.height)).combined(with: .opacity))
                         //                        .animation(.easeInOut)
                     }.padding([.leading, .trailing])
+                    Text("Time: \(game.elapsedTime) seconds")
                     BottomActionBar(game: game, geometry: geometry)
                 }
             }
@@ -48,7 +49,9 @@ struct SetGameHome: View {
             Text("Congratulations!")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-            Text("You found all the sets!")
+            Text("You found all the sets in:")
+                .font(.title2)
+            Text("\(game.elapsedTime) seconds!")
                 .font(.title2)
         }
         .frame(width: 300, height: 200)

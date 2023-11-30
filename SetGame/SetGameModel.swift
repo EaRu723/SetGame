@@ -49,7 +49,7 @@ struct SetGameModel {
         // reset wrong sets upon any interaction
         resetWrongSet()
         resetRightSet()
-        resetHintedSet()
+        resetHinted()
         
         // reset correct sets upon any new card selection
             for index in cards.indices {
@@ -111,6 +111,9 @@ struct SetGameModel {
         resetWrongSet()
         resetHintedSet()
         resetChosen()
+
+        resetRightSet()
+        resetHinted()
         
         // break if no sets
         guard (potentialSets.count > 0) else { hintingIndex = nil; return }
@@ -168,6 +171,12 @@ struct SetGameModel {
             cards[cards.firstIndex(matching: card)!].isHinted = false
         }
         hintedCards.removeAll()
+    }
+    
+    private mutating func resetHinted() {
+        for i in cards.indices {
+            cards[i].isHinted = false
+        }
     }
     
     // MARK: - Supporting Funcs - Hints
